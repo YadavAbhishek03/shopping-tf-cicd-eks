@@ -1,0 +1,19 @@
+# Ignore Terraform state and crash logs
+*.tfstate
+*.tfstate.*
+.terraform/
+crash.log
+*.tfvars
+*.tfvars.json
+
+# Ignore sensitive AWS files
+*.pem
+*.key
+
+# Ignore Python cache if any
+__pycache__/
+*.pyc
+
+# Ignore OS metadata
+.DS_Store
+Thumbs.db

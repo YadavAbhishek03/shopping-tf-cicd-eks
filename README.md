@@ -120,3 +120,13 @@ Abhishek Yadav
 GitHub: @YadavAbhishek03
 Project: caps-shopping-app
 
+🔗 Tags
+#AWS #EKS #Terraform #Kubernetes #DevOps #Docker #CloudNative
+
+
+---
+
+✅ Let me know if you'd like me to:
+- Add diagrams or visuals
+- Publish this on your GitHub for you
+- Create a `.gitignore` now too

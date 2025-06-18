@@ -17,3 +17,20 @@ __pycache__/
 # Ignore OS metadata
 .DS_Store
 Thumbs.db
+
+# Ignore GitHub Actions workflow logs (if generated locally)
+.github/workflows/*.log
+
+# Ignore Kubernetes config and local manifests if not meant to be committed
+kubeconfig
+*.yaml.backup
+
+# Ignore Docker-related files
+*.log
+docker-compose.override.yml
+.env              # if storing env vars locally
+.env.*            # any environment-specific dotenv files
+
+# VSCode specific
+.vscode/
+

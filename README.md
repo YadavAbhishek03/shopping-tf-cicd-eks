@@ -1,132 +1,78 @@
-# 🛒 Shopping App Deployment on AWS EKS using Terraform
+# 🛒 Shopping App – AWS EKS Deployment with Terraform & GitHub Actions
 
-This project demonstrates how to containerize and deploy a simple shopping app on **Amazon EKS** (Elastic Kubernetes Service) with a **custom VPC**, subnets, route tables, and public access — all automated using **Terraform**.
+This project demonstrates how to deploy a containerized Python-based shopping app on AWS EKS using Infrastructure as Code (Terraform) and GitHub Actions CI/CD pipelines.
 
----
+## 📌 Project Features
 
-## 🧰 Tech Stack
-
-- AWS (EKS, ECR, VPC, IAM)
-- Terraform
-- Docker
-- Kubernetes (`kubectl`)
-- Python HTTP Server (serving static files)
+- 🐳 Dockerized Python application
+- ☁️ AWS EKS cluster provisioning using Terraform
+- 🔄 GitHub Actions for CI/CD
+  - CI: Build & push Docker image to ECR
+  - CD: Apply Terraform and deploy app to EKS
+- ⚙️ Kubernetes manifests for Deployment & LoadBalancer Service
 
 ---
 
 ## 📁 Project Structure
 
-eks_shopping_app/
-├── app/
-│ ├── app.py
-│ └── static/
-├── k8s/
-│ ├── deployment.yml
-│ └── service.yml
-├── terraform/
-│ ├── main.tf
-│ ├── variables.tf
-│ ├── outputs.tf
-│ └── terraform.tfvars
-├── .gitignore
-└── README.md
-
+shopping-tf-cicd-eks/
+├── app/ # App source code
+├── Dockerfile # Docker build file
+├── terraform/ # All Terraform IaC configs
+├── k8s/ # Kubernetes YAMLs (Deployment + Service)
+└── .github/workflows/ # GitHub Actions CI/CD pipelines
 
 
 ---
 
-## 🚀 Step-by-Step Deployment
+## 🚀 CI/CD Pipeline Overview
 
-### 1️⃣ Clone the Project
+### CI (`ci.yml`)
+- Triggered on `push` to `master`
+- Builds Docker image
+- Pushes image to Amazon ECR
 
+### CD (`cd.yml`)
+- Triggered after CI completes
+- Runs `terraform apply` to provision EKS
+- Applies Kubernetes manifests to deploy app
+
+---
+
+## 🔐 Required GitHub Secrets
+
+Set these in your repository under **Settings > Secrets and variables > Actions**:
+
+| Name                   | Description                          |
+|------------------------|--------------------------------------|
+| `AWS_ACCESS_KEY_ID`    | Your AWS access key                  |
+| `AWS_SECRET_ACCESS_KEY`| Your AWS secret key                  |
+| `AWS_REGION`           | e.g. `ap-south-1`                    |
+| `ECR_REPOSITORY`       | ECR repository name (e.g. `caps-shopping-app`) |
+| `EKS_CLUSTER_NAME`     | Your EKS cluster name (e.g. `shopping-cluster`) |
+
+---
+
+## ✅ How to Deploy
+
+1. Push your code to the `master` branch
+2. GitHub Actions will:
+   - Build & push Docker image to ECR
+   - Provision EKS using Terraform
+   - Deploy app to Kubernetes
+
+---
+
+## 🧹 Cleanup
+
+To destroy infrastructure:
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-cd YOUR_REPO
-
-
-## Build & Push Docker Image to Amazon ECR
-
-# Authenticate Docker to your ECR
-aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin <ACCOUNT_ID>.dkr.ecr.ap-south-1.amazonaws.com
-
-# Build your image
-docker build -t caps-shopping-app ./app
-
-# Tag it for ECR
-docker tag caps-shopping-app:latest <ACCOUNT_ID>.dkr.ecr.ap-south-1.amazonaws.com/caps-shopping-app:latest
-
-# Push to ECR
-docker push <ACCOUNT_ID>.dkr.ecr.ap-south-1.amazonaws.com/caps-shopping-app:latest
-
-
-## Create EKS Infrastructure using Terraform
-
-cd terraform
-
-# Initialize Terraform
-terraform init
-
-# Preview the resources
-terraform plan
-
-# Apply and create all resources
-terraform apply -auto-approve
-
-
-This will:
-
-Create a custom VPC, subnets, and route tables
-
-Provision an EKS cluster with node groups
-
-Output kubeconfig command to connect to your cluster
-
-
-### 4️⃣ Connect to EKS
-
-aws eks update-kubeconfig --region ap-south-1 --name shopping-eks-cluster
-
-## Deploy App to EKS
-
-cd ../k8s
-
-# Apply Kubernetes manifests
-kubectl apply -f deployment.yml
-kubectl apply -f service.yml
-
-# Verify pods and service
-kubectl get pods
-kubectl get svc
-
-## Find the EXTERNAL-IP of your shopping-service, and open in browser:
-
-http://<external-lb-dns>
-
-### 🧹 Cleanup (Destroy All)
-# To destroy everything provisioned by Terraform:
-
-cd terraform
+cd terraform/
 terraform destroy -auto-approve
+" ⚠️ If state is missing, manually delete via AWS Console " 
 
-📌 Notes
-Ensure your image's container listens on port 8000.
-
-The service maps port 80 → 8000 internally.
-
-All traffic is routed through a LoadBalancer provisioned by Kubernetes.
-
-💬 Author
+👤 Author
 Abhishek Yadav
-GitHub: @YadavAbhishek03
-Project: caps-shopping-app
 
-🔗 Tags
-#AWS #EKS #Terraform #Kubernetes #DevOps #Docker #CloudNative
-
-
----
-
-✅ Let me know if you'd like me to:
-- Add diagrams or visuals
-- Publish this on your GitHub for you
-- Create a `.gitignore` now too
+🏷️ Tags
+DevOps AWS EKS Terraform GitHub Actions CI/CD Docker Kubernetes Python

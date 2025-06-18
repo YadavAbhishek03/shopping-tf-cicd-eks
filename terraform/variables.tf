@@ -11,5 +11,5 @@ variable "public_subnet_cidrs" {
 }
 
 variable "cluster_name" {
-  default = "abhi-cluster"
+  default = "shopping-cluster"
 }
